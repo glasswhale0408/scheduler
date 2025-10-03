@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import format from 'date-fns/format';
 import parse from 'date-fns/parse';
@@ -47,7 +47,7 @@ function App() {
     const saved = localStorage.getItem("events");
     if (saved) {
       const parsedEvents = JSON.parse(saved);
-      const eventsWithDates= parsedEvents.map(event=> ({...events, 
+      const eventsWithDates= parsedEvents.map(event=> ({...event, 
         start: new Date(event.start),
         end: new Date(event.end),
       }));
@@ -83,16 +83,19 @@ function App() {
         const currentMonth = currentDate.getMonth();
         const currentYear = currentDate.getFullYear();
         const day = date.getDay();
-        let style = {};
+        let style = {
+           backgroundColor: "#ffffff",
+           color: "#333333",
+        };
         if (date.getMonth() !==currentMonth || date.getFullYear() !== currentYear) {
-        style.backgroundColor = "#f0f0f0"; // 지난달/다음달 날짜 회색
-        style.color = "#a0a0a0";           // 글자도 회색
+        style.backgroundColor = "#f0f0f0"; 
+        style.color = "#a0a0a0";           
         } else if (day === 0) {
-        style.backgroundColor = "#ffe6e6"; // 일요일 빨강
+        style.backgroundColor = "#ffe6e6"; 
         } else if (day === 6) {
-        style.backgroundColor = "#e6f0ff"; // 토요일 파랑
+        style.backgroundColor = "#e6f0ff"; 
         }
-        return { style };}
+        return { style };}; //달력 색깔
 
 
   
@@ -100,7 +103,6 @@ function App() {
      <div style={{ width: "120%", maxWidth: 600, margin: "0 auto" }}>
       <h1 className='title'>❗수행평가 달력❗</h1>
       <Calendar
-        
         localizer={localizer}
         events={events}
         startAccessor="start"

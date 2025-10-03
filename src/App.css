@@ -40,11 +40,7 @@
   text-align:left;
 }
 
-.rbc-day-bg,
-.rbc-off-range-bg,
-.rbc-date-cell {
-  color: rgb(28, 164, 105);  /* 달력 날짜 숫자 색상 */
-}
+
 .rbc-btn-group{
   
   color: white;                     
@@ -64,6 +60,7 @@
 }
 .my-event{
   background-color: rgb(105, 163, 210);
+  background-size: 10px;
 }
 .rbc-calendar {
   overflow-x: auto; 
