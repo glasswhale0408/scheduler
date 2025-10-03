@@ -100,7 +100,7 @@ function App() {
 
   
   return (
-     <div style={{ width: "120%", maxWidth: 600, margin: "0 auto" }}>
+     <div style={{ width:"95%", maxWidth: "600px", margin: "20px auto 0" }}>
       <h1 className='title'>❗수행평가 달력❗</h1>
       <Calendar
         localizer={localizer}

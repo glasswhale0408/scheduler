@@ -37,21 +37,21 @@
   }
 }
 .title{
-  text-align:left;
+  text-align: center;
+  margin: 20px 10px 5px 10px;
 }
 
 
-.rbc-btn-group{
-  
+.rbc-btn-group{ 
   color: white;                     
   padding: 6px 12px;
   border-radius: 5px;        
   cursor: pointer;
   margin: 0 4px; 
-} 
+} 버튼들
+
 .rbc-btn-group button{
   margin-right: 3%;
- 
 }
 .rbc-toolbar-label{
   margin-bottom: 2%;
@@ -60,11 +60,16 @@
 }
 .my-event{
   background-color: rgb(105, 163, 210);
-  background-size: 10px;
+  background-size: 5px;
+  height: 16px;
+  display: flex;
+}
+.rbc-event-content{
+  font-size: 0.5rem;
 }
 .rbc-calendar {
-  overflow-x: auto; 
-  margin: 7%
+  height: 300px;
+  margin: 0 5px 0 5px;
 }
 .bc-day-bg{
   pointer-events: auto !important;
