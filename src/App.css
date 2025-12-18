@@ -59,13 +59,14 @@
   font-weight: bolder;
 }
 .my-event{
-  background-color: rgb(105, 163, 210);
-  background-size: 5px;
+  background-size: 8px;
+  background-color: #ffffff00;
   height: 16px;
-  display: flex;
+  margin-bottom: 0.1rem;
 }
 .rbc-event-content{
-  font-size: 0.5rem;
+  font-size: 0.7rem;
+  color: blue;
 }
 .rbc-calendar {
   height: 300px;

@@ -27,9 +27,11 @@ function App() {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [currentView,setCurrentView] =useState('month');
   const [currentDate, setCurrentDate] = useState(new Date());
+  
   const handleSelectSlot = ({start, end})=> {setSelectedSlot({ start, end });
     setIsModalOpen(true);
   }; //일정 입력
+  
   const handleSaveEvent = (title) => {
     if (title && selectedSlot) {
       const newEvent = {
@@ -43,25 +45,29 @@ function App() {
     setIsModalOpen(false);
     setSelectedSlot(null);
   }; //일정 저장
+  
   useEffect(()=>{
     const saved = localStorage.getItem("events");
     if (saved) {
       const parsedEvents = JSON.parse(saved);
       const eventsWithDates= parsedEvents.map(event=> ({...event, 
         start: new Date(event.start),
-        end: new Date(event.end),
+        end: new Date(event.end)
       }));
       setEvents(eventsWithDates);
     }
      // eslint-disable-next-line react-hooks/exhaustive-deps
   },[]); //시작 시 불러오기 
+  
   useEffect(()=>{
     localStorage.setItem("events", JSON.stringify(events));
   }, [events]); // 변경사항 저장
+  
   const handleDoubleClickEvent = (event) => {
     setSelectedEvent(event);  
     setIsDeleteModalOpen(true);
   }; //삭제할 일정 저장
+  
   const handleDeleteEvent = () => {
      if (selectedEvent) {
     setEvents((prev) => prev.filter(e => e.id !== selectedEvent.id));
@@ -69,16 +75,19 @@ function App() {
     setIsDeleteModalOpen(false);
     setSelectedEvent(null);
   }; //삭제
+  
   const formats = useMemo(() => ({
    monthHeaderFormat: 'yyyy년 M월', 
    dayHeaderFormat: 'M/d (eee)',
    weekdayFormat: 'eee',   
    }), []); //날짜 한글화
-  const messages = {
+  
+   const messages = {
     previous: '지난 달',
     next: '다음 달',
     today: '이번 달',
   }; //글자 한글화
+  
   const setColor= (date) => {
         const currentMonth = currentDate.getMonth();
         const currentYear = currentDate.getFullYear();
