@@ -9,6 +9,8 @@ import ko from "date-fns/locale/ko";
 import './App.css';
 import Modal from "./Modal";
 import DeleteModal from './DeleteModal';
+import { db } from './firebase'; 
+import { collection, addDoc, getDocs, deleteDoc, doc, query } from "firebase/firestore";
 
 const localizer = dateFnsLocalizer({
   format,
@@ -32,7 +34,7 @@ function App() {
     setIsModalOpen(true);
   }; //일정 입력
   
-  const handleSaveEvent = (title) => {
+  const handleSaveEvent = async (title) => {
     if (title && selectedSlot) {
       const newEvent = {
         id: events.length + 1,
@@ -40,42 +42,59 @@ function App() {
         start: selectedSlot.start,
         end: selectedSlot.end,
       };
-      setEvents((prevEvents) => [...prevEvents, newEvent]);
+      try {
+      // Firebase의 'events'라는 폴더(컬렉션)에 저장
+      const docRef = await addDoc(collection(db, "events"), newEvent);
+      
+      // 화면에도 즉시 반영 (id는 Firebase가 생성한 아이디를 사용)
+      setEvents((prevEvents) => [...prevEvents, { ...newEvent, id: docRef.id }]);
+    } catch (e) {
+      console.error("저장 실패: ", e);
+    }
     }
     setIsModalOpen(false);
     setSelectedSlot(null);
   }; //일정 저장
   
-  useEffect(()=>{
-    const saved = localStorage.getItem("events");
-    if (saved) {
-      const parsedEvents = JSON.parse(saved);
-      const eventsWithDates= parsedEvents.map(event=> ({...event, 
-        start: new Date(event.start),
-        end: new Date(event.end)
-      }));
-      setEvents(eventsWithDates);
-    }
-     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[]); //시작 시 불러오기 
-  
-  useEffect(()=>{
-    localStorage.setItem("events", JSON.stringify(events));
-  }, [events]); // 변경사항 저장
+  useEffect(() => {
+  const fetchEvents = async () => {
+    const q = query(collection(db, "events"));
+    const querySnapshot = await getDocs(q);
+    
+    const eventsWithDates = querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+      // Firebase 날짜(Timestamp)를 자바스크립트 날짜 객체로 변환
+      start: doc.data().start.toDate(),
+      end: doc.data().end.toDate(),
+    }));
+    
+    setEvents(eventsWithDates);
+  };
+
+  fetchEvents();
+}, []);
   
   const handleDoubleClickEvent = (event) => {
     setSelectedEvent(event);  
     setIsDeleteModalOpen(true);
   }; //삭제할 일정 저장
   
-  const handleDeleteEvent = () => {
-     if (selectedEvent) {
-    setEvents((prev) => prev.filter(e => e.id !== selectedEvent.id));
-    } 
-    setIsDeleteModalOpen(false);
-    setSelectedEvent(null);
-  }; //삭제
-  
+  const handleDeleteEvent = async () => {
+  if (selectedEvent) {
+    try {
+      // Firebase에서 해당 ID의 문서 삭제
+      await deleteDoc(doc(db, "events", selectedEvent.id));
+      
+      // 화면에서도 삭제
+      setEvents((prev) => prev.filter(e => e.id !== selectedEvent.id));
+    } catch (e) {
+      console.error("삭제 실패: ", e);
+    }
+  }
+  setIsDeleteModalOpen(false);
+  setSelectedEvent(null);
+};
   const formats = useMemo(() => ({
    monthHeaderFormat: 'yyyy년 M월', 
    dayHeaderFormat: 'M/d (eee)',
